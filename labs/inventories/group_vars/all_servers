@@ -1,0 +1,10 @@
+---
+var1: test
+var2: sample
+
+#Variables as conditional values
+{% for host in groups['app'] %}
+   var1: app1
+   var2: app2
+{% endfor %}
+
