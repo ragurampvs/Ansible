@@ -1,5 +1,7 @@
 ---
-- hosts: web
+- hosts: localhost
   tasks:
     - name: Test Plabook
-      command: echo "Hi, Welcome to GITHUB {{ var3 }} {{ var4 }}"
+      command: echo "Hi, Welcome to GITHUB"
+      register: cmd_output
+    - debug: var=cmd_output
