@@ -1,5 +1,5 @@
 ---
-- hosts: localhost
+- hosts: web
   tasks:
     - name: Test Plabook
-      command: echo "Hi, Welcome to GITHUB"
+      command: echo "Hi, Welcome to GITHUB {{ var3 }} {{ var4 }}"

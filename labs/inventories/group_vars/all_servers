@@ -3,8 +3,8 @@ var1: test
 var2: sample
 
 #Variables as conditional values
-{% for host in groups['app'] %}
-   var1: app1
-   var2: app2
+{% for host in group_vars['web'] %}
+   var3: web1
+   var4: web2
 {% endfor %}
 
