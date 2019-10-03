@@ -1,0 +1,12 @@
+- hosts: web,db
+  become: true
+  vars:
+  # created by - python -c 'import crypt;print crypt.crypt("test123","$1$SomeSalt")'
+    password: $1$SomeSalt$/EhxDDy4qw2eeWnK02JJC1
+  tasks:
+    - user: name="{{ item }}" password={{password}} state=present
+      with_items:
+          - user1
+          - user2
+          - user3
+          - user4

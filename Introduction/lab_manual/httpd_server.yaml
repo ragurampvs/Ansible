@@ -1,0 +1,19 @@
+---
+- name: Package Install
+  hosts: web
+  become: yes
+  gather_facts: no
+  tasks:
+
+    - name: Open Firewall Port
+      firewalld: port=80/tcp zone=public permanent=true state=enabled immediate=yes
+
+    - name: Insall httpd Package
+      yum: name=httpd state=latest   
+
+    - name: Sample index.html is present
+      copy: src=index.html dest=/var/www/html/index.html owner=apache group=apache mode=0644
+
+    - name: Start & Enable httpd service
+      service: name=httpd state=started enabled=true
+...

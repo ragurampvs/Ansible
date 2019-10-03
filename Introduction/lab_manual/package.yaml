@@ -1,0 +1,10 @@
+---
+- name: Package Install
+  hosts: db
+  gather_facts: no
+  tasks:
+    - name: Insall httpd Package
+      yum: name=httpd state=latest   
+      become: yes
+      become_method: sudo
+...

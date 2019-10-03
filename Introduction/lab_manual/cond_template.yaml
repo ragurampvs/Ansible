@@ -1,0 +1,14 @@
+---
+- name: Package Install
+  hosts: web
+  become: yes
+  gather_facts: yes
+  tasks:
+    - name: Template sample playbook
+      template: src=index.j2 dest=/var/www/html/index.html 
+      when:
+        - ansible_distribution == "RedHat"
+
+    - name: Start & Enable httpd service
+      service: name=httpd state=started enabled=true
+...

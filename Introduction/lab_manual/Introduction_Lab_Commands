@@ -1,0 +1,136 @@
+Setup Ansible Lab:-
+Base OS --> CentOS 7.5
+	Install & Enable Networking on KVM to create multiple Virtual machines 
+		https://www.linuxtechi.com/install-kvm-hypervisor-on-centos-7-and-rhel-7/
+
+Control Node	--> Centos 7.5
+	Install ansible --> #yum install ansible
+	Create & Copy ssh keys to managed nodes (ssh-keygen, ssh-copy-id)
+
+Manage Node	--> 3 (2-web, 1-db) (All are CentOS 7.5) {mnode1 / mnode2 / mnode3 are host-names }
+	Create ansible user on all the managed nodes and give sudo access without password
+	Disable SELinux
+
+Basic Ansible Lab Setup --> 1-Control Node & 1-Manage Node is more than enough 
+############################################################################################
+
+Ansible Ad-Hoc Commands:-
+
+// Add all your managed nodes to /etc/ansible/hosts file for Inventory management. //
+
+// 	Simple Lab Setup//
+
+	[web]
+	mnode1
+	mnode2
+
+	[db]
+	mnode3 
+
+	[datacenter:children]
+	web
+	db
+
+	[insecuressh:children]
+	datacenter
+
+	[insecuressh:vars]
+	ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+
+
+Ansible Module checking commands:-
+	$ ansible-doc -l
+	$ ansible-doc <Module Name> → ansible-doc file
+
+Use your own inventory file & Config files:-
+	$ ansible all --list-hosts				- to list all hosts in inventory file
+	$ ansible web --list-hosts				- to list only web host group hosts list-host
+	$ ansible localhost -m debug -a 'var=groups.keys()'	- to list only group names in inventory file
+	$ ansible localhost -m debug -a 'var=groups'		- to list groups and its host lists
+	
+	// Create hosts file & ansible.cfg file //
+		$ vim ansible.cfg
+			inventory = <Current Working Directory>/hosts
+		$ vim hosts
+			mnode2
+	$ ansible --version	→ to check its version and configurations details
+	
+	// Usage of ansible-inventory file for better understanding in a easy way //
+
+	$ ansible-inventory --list		- to list all the hosts where its group & ungrouped list
+	$ ansible-inventory --graph		- to view it in a Graph Mode
+	$ ansible-inventory --host=mnode3 	- to list only the variables of specific host
+
+	// After entering user-name & password in hosts file & ansible command without user details //
+
+To check the connectivity using ping:-
+
+	$ ansible web -m ping -u ansible			- ping only “web” hostgroup
+	$ ansible web,db -m ping -u ansible			- ping web & db hostgroup
+	$ ansible all -i mnode2, -m ping -u ansible		- ping only mnode2 
+	$ ansible all -m ping -u ansible --limit 'all:!mnode2'	- ping all except mnode2
+
+How to use adhoc command without SSH Pass-wordless login:-
+
+	$ ansible web -m shell -a “uptime” -k -u ansible	→ It will prompt for a SSH Password
+	$ ansible web -m shell -a “uptime” -K -u ansible	→ Prompt for a SSH Password with SUDO 
+	$ ansible db -m shell -a "fdisk -l" -u ansible -b	→ run as ansible and become as root, also “s” option can be used but it should be 									  executed without password.
+
+Ansible Facts:-
+	
+OHAI – Chef based plugins || FACTER – Puppet based plugins
+
+Possible Values: all, min, hardware, network, virtual, ohai & facter
+
+	 // Store the collected facts in a temporary directory with hostname as a file //
+		$ ansible all -m setup -u ansible --tree /tmp/facts
+
+	// Only collect minimum value //
+		$ ansible all -m setup -a 'gather_subset=!all' -u ansible
+
+	// Display only distribution related factors from db hostgroup servers. //
+		$ ansible db -m setup -a "filter=ansible_distribution*" -u ansible
+
+Playbook Execution Commands:-
+
+	// To check the Syntax is perfect //
+		$ ansible-playbook package.yaml -u ansible --syntax-check 
+
+	// Pre-Filght check before actual installation //
+		$ ansible-playbook package.yaml -u ansible --check
+
+To Install the httpd package:-
+	Privilege Escalation options:-
+	
+	      // Create sudoers file in /etc/sudoers.d/sudoers → ansible ALL=(ALL) NOPASSWD: ALL //
+			
+		Option 1:- $ ansible-playbook package.yaml 		→ common to whole playbook
+		Option 2:- $ ansible-playbook package.yaml -u ansible 	→ for individual play
+		Option 3:- $ ansible-playbook package.yaml -u ansible 	→ for individual play
+
+Usage of Multiple Modules for Apache httpd server configuration:-
+	$ ansible-playbook httpd_server.yaml -u ansible
+
+	Actually it succeed for mnode1 and failed mnode2, after fixing sudo issue with mnode2 server then wen can try with --limit @/data/introduction/lab_manual/httpd_server.retry option. Nothing to be modified on playbook hosts section, It will install only on failed node.
+
+Conditions & Templates:
+	$ ansible-playbook cond_template.yaml -u ansible
+
+Loops & Variables:-
+	$ ansible-playbook loops_variables.yaml -u ansible
+
+Tags:
+Multiple options to use tags:
+	Option 1: ansible-playbook tags.yaml -t t2 -u ansible 		→ use only one tag
+	Option 2: ansible-playbook tags.yaml -t t1,t2 -u ansible 	→ use t1 & t2 tags
+	Option 3: ansible-playbook tags.yaml --tags=t1,t2 -u ansible 	→ use t1 & t2 tags
+	Option 4: ansible-playbook tags.yaml --skip-tags=t1 -u ansible	→ will skip t1 tag
+
+Debug & Ignore_Errors:
+	$ ansible-playbook debug_ignore.yaml -u ansible
+
+Roles:-
+	$ ansible-playbook motd_roles.yml 	
+
+
+

@@ -1,0 +1,15 @@
+---
+- name: Package Install
+  hosts: web
+  gather_facts: no
+  tasks:
+
+    - name: Check local time
+      command: date
+      register: result
+    - debug: var=result
+
+    - name: Check foobar.com reachability
+      command: ping –c1 www.foobar.com
+      ignore_errors: yes
+...
