@@ -101,5 +101,13 @@ Create Ansible Control machine & Managed node using LXC
 
 *** Check the connectivity through ansible command ***
 	$ ansible web -m ping -u ansible
+
+To Stop a Container:-
+	# lxc-stop -n <Container Name>
+	
+To clone a container as backup, for that container should be in stopped state:-
+	# lxc-clone -o <Old Container Name> -n <New Clone Name>
+	
+
 	
 
