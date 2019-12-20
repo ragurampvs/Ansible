@@ -108,6 +108,9 @@ To Stop a Container:-
 To clone a container as backup, for that container should be in stopped state:-
 	# lxc-clone -o <Old Container Name> -n <New Clone Name>
 	
+To know the container information:- 
+	# lxc-info -n <Running Container Name>
 
+To Destroy a Container:- (Container should be in stopped state)
+	# lxc-destroy -n <Container Name>
 	
-
