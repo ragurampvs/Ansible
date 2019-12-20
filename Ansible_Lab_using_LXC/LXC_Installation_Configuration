@@ -1,4 +1,4 @@
-Installing LXC on CentOS 7.7 - Everything should run as root user
+			Installing Lxc On Centos 7.7 - Everything Should Run As Root User
 
 After installing CentOS 7.7, please follow the procedures to install and configure LXC
 
@@ -76,12 +76,30 @@ Create Ansible Control machine & Managed node using LXC
 	  # lxc-create -n ansnode2 -t centos			--> Managed Node 2
 	  # chroot /var/lib/lxc/ansnode2/rootfs passwd
 
+*** Login to Control node contanier - # ssh root@actrlserver ***
+	Install Ansible / Create ansible user / Install SUDO package / Add Managed nodes in /etc/hosts file 
+	# yum install ansible.noarch -y
+	# useradd ansible
+	# passwd ansible
+	# yum install -y sudo.x86_64
+	# vi /etc/sudoers.d/sudoers --> ansible	ALL=(ALL)	NOPASSWD:ALL
+	# vi /etc/hosts	--> Enter as per your IP Address and hostname
+		192.168.122.204	actrlserver
+		192.168.122.207 ansnode1
+		192.168.122.100 ansnode2
 
+*** After adding user in ansnode1 & ansnode2 follow the below steps:-
+	# su - ansible
+	# ssh-keygen --> hit enter key 3 times
+	# ssh-copy-id ansible@ansnode1
+	# ssh-copy-id ansible@ansnode2
 
+*** Enter Managed node information in /etc/ansible/hosts file ***
+	[web]
+	ansnode1
+	ansnode2
 
-
-
-
-
-
+*** Check the connectivity through ansible command ***
+	$ ansible web -m ping -u ansible
+	
 
