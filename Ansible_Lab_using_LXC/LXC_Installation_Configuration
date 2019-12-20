@@ -113,4 +113,13 @@ To know the container information:-
 
 To Destroy a Container:- (Container should be in stopped state)
 	# lxc-destroy -n <Container Name>
-	
+
+To check LXC Configurations:-
+	# lxc-config -l 		--> Display available configurations
+	# lxc-config lxc.default_config --> Check default configuration file path
+	# lxc-config lxc.lxcpath	--> Check for Containers stored path
+   *** Container config file path for individual container ***
+   	[root@localhost actrlserver_clone]# ls -l /var/lib/lxc/actrlserver_clone
+	total 4
+	-rw-r--r--   1 root root 1010 Dec 20 22:56 config
+	dr-xr-xr-x. 18 root root  259 Dec 20 22:11 rootfs
