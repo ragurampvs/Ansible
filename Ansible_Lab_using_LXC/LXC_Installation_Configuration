@@ -1,4 +1,6 @@
-Installing LXC on CentOS 7.X - Everything should run as root user
+Installing LXC on CentOS 7.7 - Everything should run as root user
+
+After installing CentOS 7.7, please follow the procedures to install and configure LXC
 
 Disable SELinux - Change line number 7 as mentioned below
 	# vi /etc/selinux/config 
