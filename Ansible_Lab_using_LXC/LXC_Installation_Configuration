@@ -1,0 +1,85 @@
+Installing LXC on CentOS 7.X - Everything should run as root user
+
+Disable SELinux - Change line number 7 as mentioned below
+	# vi /etc/selinux/config 
+		SELINUX=disabled
+
+Check whether its fully upgraded & Reboot the server
+	# yum upgrade -y
+	# init 6
+
+Install EPEL repositories 
+	# yum install epel-release -y
+
+Install Perl/libvirt
+	# yum install perl libvirt -y
+
+Install Debootstrap - which will allow debian install on CentOS system
+	# yum install debootstrap -y
+
+Install LXC packages
+	# yum install lxc lxc-templates lxc-extra -y
+
+Start lxc & libvirtd services
+	# systemctl start lxc.service
+	# systemctl start libvirtd
+	# systemctl enable lxc.service
+	# systemctl enable libvirtd
+
+To create a container 
+	*** Ubuntu Container Commands ***
+	# lxc-create -n <Container Name> -t <Template Name> --> lxc-create -n ubuntutest -t ubuntu
+	
+		##
+		# The default user is 'ubuntu' with password 'ubuntu'!
+		# Use the 'sudo' command to run tasks as root in the container.
+		##
+
+	*** CentOS Container Commands ***
+	# lxc-create -n centostest -t centos
+
+		The temporary root password is stored in:
+
+        	'/var/lib/lxc/centostest/tmp_root_pass'
+
+		The root password is set up as expired and will require it to be changed
+		at first login, which you should do as soon as possible.  If you lose the
+		root password or wish to change it without starting the container, you
+		can change it from the host by running the following command (which will
+		also reset the expired flag):
+
+        	chroot /var/lib/lxc/centostest/rootfs passwd
+
+To start Container
+	# lxc-start -n centostest -d
+	# lxc-start -n ubuntutest -d
+
+Check the IP-Address for container
+	# lxc-ls -f 
+
+Login procedure for ubuntu & centos
+	*** Change password for centos ***
+	# chroot /var/lib/lxc/centostest/rootfs passwd	--> Enter root password twice
+	# ssh root@<Centos IP> --> Give root password which we set in previous step
+	
+	*** Login to Ubuntu ***
+	# ssh ubuntu@<Ubuntu IP>  --> "ubuntu" is the password
+
+Create Ansible Control machine & Managed node using LXC
+	
+	  # lxc-create -n actrlserver -t centos			--> Control Server
+	  # chroot /var/lib/lxc/actrlserver/rootfs passwd
+	  # lxc-create -n ansnode1 -t centos			--> Managed Node 1
+	  # chroot /var/lib/lxc/ansnode1/rootfs passwd
+	  # lxc-create -n ansnode2 -t centos			--> Managed Node 2
+	  # chroot /var/lib/lxc/ansnode2/rootfs passwd
+
+
+
+
+
+
+
+
+
+
