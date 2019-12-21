@@ -97,8 +97,8 @@ Create Ansible Control machine & Managed node using LXC
 
 *** Enter Managed node information in /etc/ansible/hosts file ***
 	[web]
-	ansnode1
-	ansnode2
+	managenode1
+	managenode2
 
 *** Check the connectivity through ansible command ***
 	$ ansible web -m ping -u ansible
