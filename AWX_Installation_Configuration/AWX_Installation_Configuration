@@ -7,8 +7,6 @@ Disable SELinux
 	# vim /etc/selinux/config 
 		SELINUX=disabled
 		
-Install AWX 
-	
 Install Pre-requisite Packages
 
 	# firewall-cmd --permanent --add-service=http
@@ -29,6 +27,8 @@ Install Pre-requisite Packages
 
 	# pip install more-itertools==5.0.0
 
+Install AWX 
+	
 	# git clone --depth 50 https://github.com/ansible/awx.git
 
 	# cd awx/installer
