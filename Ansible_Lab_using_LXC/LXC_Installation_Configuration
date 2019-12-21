@@ -69,30 +69,31 @@ Login procedure for ubuntu & centos
 
 Create Ansible Control machine & Managed node using LXC
 	
-	  # lxc-create -n actrlserver -t centos			--> Control Server
+	  # lxc-create -n controlnode -t centos			--> Control Server
 	  # chroot /var/lib/lxc/actrlserver/rootfs passwd
-	  # lxc-create -n ansnode1 -t centos			--> Managed Node 1
+	  # lxc-create -n managenode1 -t centos			--> Managed Node 1
 	  # chroot /var/lib/lxc/ansnode1/rootfs passwd
-	  # lxc-create -n ansnode2 -t centos			--> Managed Node 2
+	  # lxc-create -n managenode2 -t centos			--> Managed Node 2
 	  # chroot /var/lib/lxc/ansnode2/rootfs passwd
 
 *** Login to Control node contanier - # ssh root@actrlserver ***
-	Install Ansible / Create ansible user / Install SUDO package / Add Managed nodes in /etc/hosts file 
+	Install Ansible / Create ansible user / Install SUDO package / Add Managed nodes in /etc/hosts file
+	# yum install -y epel-release
 	# yum install ansible.noarch -y
 	# useradd ansible
 	# passwd ansible
 	# yum install -y sudo.x86_64
 	# vi /etc/sudoers.d/sudoers --> ansible	ALL=(ALL)	NOPASSWD:ALL
 	# vi /etc/hosts	--> Enter as per your IP Address and hostname
-		192.168.122.204	actrlserver
-		192.168.122.207 ansnode1
-		192.168.122.100 ansnode2
+		192.168.122.204	controlnode
+		192.168.122.207 managenode1
+		192.168.122.100 managenode2
 
 *** After adding user in ansnode1 & ansnode2 follow the below steps:-
 	# su - ansible
 	# ssh-keygen --> hit enter key 3 times
-	# ssh-copy-id ansible@ansnode1
-	# ssh-copy-id ansible@ansnode2
+	# ssh-copy-id ansible@managenode1
+	# ssh-copy-id ansible@managenode2
 
 *** Enter Managed node information in /etc/ansible/hosts file ***
 	[web]
