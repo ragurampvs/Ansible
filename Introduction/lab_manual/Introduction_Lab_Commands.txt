@@ -108,9 +108,9 @@ To Install the httpd package:-
 	
 	      // Create sudoers file in /etc/sudoers.d/sudoers → ansible ALL=(ALL) NOPASSWD: ALL //
 			
-		Option 1:- $ ansible-playbook package.yaml 		→ common to whole playbook
-		Option 2:- $ ansible-playbook package.yaml -u ansible 	→ for individual play
-		Option 3:- $ ansible-playbook package.yaml -u ansible 	→ for individual play
+		Option 1:- $ ansible-playbook package.yaml 			→ common to whole playbook
+		Option 2:- $ ansible-playbook package.yaml -u ansible 		→ for individual play
+		Option 3:- $ ansible-playbook package.yaml -k -u ansible 	→ for individual play, giving password
 
 Usage of Multiple Modules for Apache httpd server configuration:-
 	$ ansible-playbook httpd_server.yaml -u ansible
