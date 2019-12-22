@@ -20,6 +20,10 @@ Ansible Ad-Hoc Commands:-
 
 // 	Simple Lab Setup//
 
+	[test-vars]
+	server1 ansible_connection=ssh ansible_user=myuser
+	server2 ansible_connection=ssh ansible_user=myotheruser
+	
 	[web]
 	mnode1
 	mnode2
