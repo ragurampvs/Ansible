@@ -1,7 +1,6 @@
 Setup Ansible Lab:-
-Base OS --> CentOS 7.5
-	Install & Enable Networking on KVM to create multiple Virtual machines 
-		https://www.linuxtechi.com/install-kvm-hypervisor-on-centos-7-and-rhel-7/
+Base OS --> CentOS 7.7
+	For settip up lab, please refer a separate document - KVM_Installation_Configuration_with_Networking.txt (Available in the same path )
 
 Control Node	--> Centos 7.5
 	Install ansible --> #yum install ansible

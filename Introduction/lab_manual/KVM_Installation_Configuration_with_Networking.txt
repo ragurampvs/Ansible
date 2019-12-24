@@ -1,0 +1,57 @@
+Disable firewalld & SELinux
+	# vim /etc/selinux/config
+		SELINUX=disabled
+	# systemctl stop firewalld.service
+	# systemctl disable firewalld.service
+
+Install EPEL package
+	# yum install -y epel-release
+
+Check Virtualization enabled in our processor 
+	# grep -E 'svm|vmx' /proc/cpuinfo
+
+Install KVM packages
+	#  yum install -y qemu-kvm libvirt libvirt-python libguestfs-tools virt-install virt-manager
+
+Start the libvirtd service
+	# systemctl enable libvirtd && systemctl start libvirtd
+
+Check Installed module
+	# lsmod | grep kvm
+
+Configuring Bridge Network for LAN communication - Check your ethernet name using "ifconfig" command
+	# cd /etc/sysconfig/network-scripts/
+	# cp ifcfg-enp0s31f6 /root/ifcfg-enp0s31f6_bkp
+	
+Modify ifcfg-enp0s31f6 - Add "BRIDGE=br0" at the last line
+	# vi ifcfg-enp0s31f6
+		BRIDGE=br0
+
+Create Bridge networking configuration file
+	# vim ifcfg-br0
+		DEVICE="br0"
+		# BOOTPROTO is up to you. If you prefer “static”, you will need to
+		# specify the IP address, netmask, gateway and DNS information.
+		BOOTPROTO="dhcp"
+		IPV6INIT="yes"
+		IPV6_AUTOCONF="yes"
+		ONBOOT="yes"
+		TYPE="Bridge"
+		DELAY="0"
+
+Enable network forwarding. Add to /etc/sysctl.conf:
+	# vim /etc/sysctl.conf
+		net.ipv4.ip_forward = 1
+	# sysctl -p /etc/sysctl.conf
+
+Restart Networkmanger service to enable the bridge network and check the service after restart
+	# systemctl restart NetworkManager
+	# systemctl status NetworkManager
+
+Reboot the machine - Highly reccommended
+	# reboot
+
+Open Virtual Machine Manager - Keep your OS ISO file for isntallation 
+	Applications --> System Tools --> Virtual Machine Manager --> Click "Create a New Virtual Machine" --> Select "Local install media (ISO image or CDROM) --> Click Forward --> Select "Use ISO image --> click "Browse" --> Select "Browse Local" --> Select your ISO file path --> Click "Forward" --> Some popup will be The emulator ****** --> Select "Yes" --> Choose Memory & CPU Settings (Memory - 2048 / CPUs -2) --> Click "Forward" --> Check "Enable storage for this virtual machine --> Underneath change the size of the disk required (Size - 25.0) --> Give Name of the VM (managenode1) --> Ensure under Network Selection, whether our Bridge network is selected --> and then click Finish
+
+
