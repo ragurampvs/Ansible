@@ -53,5 +53,7 @@ Reboot the machine - Highly reccommended
 
 Open Virtual Machine Manager - Keep your OS ISO file for isntallation 
 	Applications --> System Tools --> Virtual Machine Manager --> Click "Create a New Virtual Machine" --> Select "Local install media (ISO image or CDROM) --> Click Forward --> Select "Use ISO image --> click "Browse" --> Select "Browse Local" --> Select your ISO file path --> Click "Forward" --> Some popup will be The emulator ****** --> Select "Yes" --> Choose Memory & CPU Settings (Memory - 2048 / CPUs -2) --> Click "Forward" --> Check "Enable storage for this virtual machine --> Underneath change the size of the disk required (Size - 25.0) --> Give Name of the VM (managenode1) --> Ensure under Network Selection, whether our Bridge network is selected --> and then click Finish
+       
+***** Installation & Configuration of KVM with networking is completed *****       
 
 
