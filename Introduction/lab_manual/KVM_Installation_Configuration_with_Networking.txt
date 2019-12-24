@@ -23,7 +23,7 @@ Configuring Bridge Network for LAN communication - Check your ethernet name usin
 	# cd /etc/sysconfig/network-scripts/
 	# cp ifcfg-enp0s31f6 /root/ifcfg-enp0s31f6_bkp
 	
-Modify ifcfg-enp0s31f6 - Add "BRIDGE=br0" at the last line
+Modify ifcfg-enp0s31f6 - Add "BRIDGE=br0" at the last line of ifcfg-enp0s31f6
 	# vi ifcfg-enp0s31f6
 		BRIDGE=br0
 
