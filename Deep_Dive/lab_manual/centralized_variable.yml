@@ -1,0 +1,11 @@
+- hosts: managenode2
+  gather_facts: False
+  tasks: 
+    
+    - name: Testing for centralized variables
+      shell: echo {{ item }}
+      with_items:
+          - "{{ name }}"
+          - "{{ company }}"
+          - "{{ location }}"
+          - "{{ class }}"

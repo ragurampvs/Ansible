@@ -1,0 +1,9 @@
+---
+- name: Roles/Handlers/Tags Example
+  hosts: web
+  user: ansible
+  become: true
+
+  roles:
+    - {role: httpd, tags: ['httpd_install'] }
+    - {role: restart, tags: ['httpd_start'] }

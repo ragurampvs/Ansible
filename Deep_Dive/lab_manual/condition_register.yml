@@ -1,0 +1,9 @@
+- hosts: all
+  gather_facts: no
+  tasks:
+    - name: Registering ansible users 6column 
+      shell: "cat /etc/passwd | grep ansible | cut -d : -f6"
+      register: passwd_result
+
+    - name: Taking output and saving to a file
+      copy: content="Ansible users shell - {{ passwd_result.stdout }}" dest=/tmp/cond_register.txt

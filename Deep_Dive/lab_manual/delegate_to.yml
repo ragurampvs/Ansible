@@ -1,0 +1,12 @@
+--- 
+- hosts: web
+  user: ansible
+  tasks:
+
+    - name: check that i have log file for all hosts on my local machine
+      copy: src=delegate_to.txt dest=/tmp/
+#      delegate_to: mnode1
+      delegate_to: "{{ play_hosts | first }}"
+
+    - name: Simple shell module
+      shell: df -h | grep tmp

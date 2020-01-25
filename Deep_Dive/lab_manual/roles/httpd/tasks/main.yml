@@ -1,0 +1,15 @@
+---
+    - name: Open Firewall Port
+      firewalld: port=80/tcp zone=public permanent=true state=enabled immediate=yes
+
+    - name: Insall httpd Package
+      yum: name=httpd state=latest   
+
+    - name: Start & Enable httpd service
+      service: name=httpd state=started enabled=true
+
+    - name: Sample index.html is present
+      template: src=index.j2 dest=/var/www/html/index.html owner=apache group=apache mode=0644
+      notify:
+         - restart httpd
+...

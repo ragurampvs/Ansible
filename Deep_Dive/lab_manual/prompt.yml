@@ -1,0 +1,19 @@
+---
+- hosts: all
+  gather_facts: False
+  become: True
+  vars_prompt:
+    - name: give_username
+      prompt: "Enter the Username to create"
+      private: no
+
+    - name: users_password
+      private: yes
+      prompt: "Enter user's password"
+      encrypt: "sha512_crypt"
+      confirm: yes
+      salt_size: 7
+
+  tasks:
+    - name: Creating User on Managed nodes
+      user: name={{ give_username }} password={{ users_password }} state=present

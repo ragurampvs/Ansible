@@ -1,0 +1,15 @@
+---
+- hosts: web
+  become: yes
+  gather_facts: no
+  serial: 1
+  tasks:
+
+    - name: Insall memcached Package
+      yum: name=memcached state=latest   
+    
+    - name: Check memcached status
+      shell: rpm -qa | grep memcached
+      register: package_status
+
+    - debug: var=package_status.stdout

@@ -1,0 +1,10 @@
+- hosts: web
+  gather_facts: False
+  vars_files: vault_vars.yml
+  tasks:
+    - name: Add secret text to vault.txt
+      lineinfile:
+        path: /tmp/vault.txt
+        create: yes
+        line: "{{ password }}"
+      no_log: true

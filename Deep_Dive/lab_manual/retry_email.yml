@@ -1,0 +1,17 @@
+- hosts: all
+  gather_facts: no
+  tasks: 
+  
+    - name: Using retry option 
+      shell: ls -lrt /tmp/retry.txt
+      register: result
+      retries: 5
+      delay: 20
+      until: result.rc == 0
+
+    - debug: var=result
+
+    - name: Example playbook sending mail to root
+      mail:
+        subject: Testing email using ansible
+      delegate_to: localhost

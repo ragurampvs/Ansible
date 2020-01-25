@@ -1,0 +1,11 @@
+---
+ - hosts: web
+   gather_facts: False
+   become: true
+   tasks:
+    - name: install docker
+      yum:
+        name: docker-io
+        state: installed
+      async: 500
+      poll: 0

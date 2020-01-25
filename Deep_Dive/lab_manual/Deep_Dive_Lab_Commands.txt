@@ -1,0 +1,151 @@
+Difference between shell & command module:
+	$ ansible web -m command -a "df -h | grep tmp" -u ansible
+	$ ansible web -m shell -a "df -h | grep tmp" -u ansible
+
+	Command:- The given command will be executed on all selected nodes.The command(s) will not be processed through the shell, so variables like 			  $HOME and operations like "<", ">", "|", ";" and "&" will not work. Use the shell module if you need these features.
+
+	Shell:- The shell module takes the command name followed by a list of space-delimited arguments.It is almost exactly like the command module 			but runs the command through a shell (/bin/sh) on the remote node. For Windows targets, use the win_shell module instead.
+
+Roles with Handlers:-
+	$ ansible-playbook notify_handler.yml
+	$ ansible-playbook notify_handler.yml --start-at-task="Sample index.html is present"
+	$ ansible-playbook notify_handler.yml --tags=httpd_start --> roles with tags
+
+Playbook Execution Time Calculations:-
+	Modify in /etc/ansible/ansible.cfg --> callback_whitelist = timer (Final result) || callback_whitelist = profile_tasks (Individual Plays)
+	$ ansible-playbook notify_handler.yml	--> for playbook actions
+	$ ansible web -m setup -u ansible	--> it will work for adhoc command too
+
+Log Enablement:-
+	Option 1: Modify in /etc/ansible/ansible.cfg
+		[defaults] 
+		log_path=/path/to/logfile
+	
+	Option 2: export ANSIBLE_LOG_PATH=/tmp/ansible.log
+
+	Option 3: ANSIBLE_LOG_PATH=/tmp/test.txt ansible web -m setup -u ansible
+
+Delegate To examples:-
+	# delegate_to: mnode1
+        # delegate_to: "{{ play_hosts | first }}"
+        # delegate_to: "{{ groups['web'] | first }}"
+	# delegate_to: "{{ groups['web'][0] }}"		--> Here "0" stands for first node in web host group
+
+	$ ansible-playbook delegate_to.yml
+
+Failed when condition not met:-
+	$ ansible-playbook failed_when.yml
+
+Block/Rescue & Fetch Example:-
+	$ ansible-playbook block_rescue.yml 
+		Option 1 --> - fetch: src=/tmp/block.txt dest=/tmp/ flat=yes	--> copy only file
+		Option 2 --> - fetch: src=/tmp/block.txt dest=/tmp/   		--> create remote host directory and copy the file
+
+Run_Once Example:-
+	$ ansible-playbook run_once.yml
+
+Blockinfile / Lineinfile / Replace Module Examples:-
+	Create /tmp/blockinfile.txt file on managed nodes
+
+	shell: sed -ie '0,/lineinfile/s//replace_module/' /tmp/blockinfile.txt --> Replacing first occurence
+
+	// Replacing last occurence // 
+	#        regexp: '^([^#]+)lineinfile(.*)$'  --> replacing last occurence
+	#        replace: '\1replace_module\2' --> replacing with last occurence combination with previous line
+	$ ansible-playbook block_lineinfile_replace.yml
+
+Asking user confirmation for proceeding each plays in a playbook:-
+	$ ansible-playbook block_rescue.yml --step
+
+Password as variable prompt:-
+	$ ansible-playbook prompt.yml -u ansible
+
+Disabling Facts & Collecting report:-
+	$ ansible-playbook disable_fact.yml -u ansible
+
+Registering & making it as variable for next play:-
+	$ ansible-playbook condition_register.yml -u ansible
+	
+Serial Execution example:-
+	$ ansible-playbook serial_example.yml -u ansible
+
+get_url / Uarchive / cron module usage:-
+	$ ansible-playbook geturl_unarchive_cron.yml -k -u ansible
+	
+	get_url --> downloads files from HTTP, HTTPS, or FTP to the remote server.
+	uri 	--> interacts with HTTP and HTTPS web services.
+	With uri you're not limited to HTTP GET methods, but can use POST and others to, so you can talk to APIs and other endpoints. get_url is just for downloading.
+
+retry/until/delay combination & sending simple email to localhost:-
+	$ ansible-playbook retry_email.yml -k -u ansible
+
+Centralized variable declaration examples:-
+	$ ansible-playbook centralized_variable.yml -i inventories/hosts.ini -k -u ansible
+
+Ansible Vault Usage:-
+	# ansible-vault create vault_examle.yml		--> To create a new encrypted vault file
+	# ansible-vault encrypt vault_examle.yml	--> To encrypt an existing file which is human readable format
+	# ansible-vault edit vault_examle.yml		--> To edit an existing encrypted vault file
+	# ansible-vault decrypt vault_examle.yml	--> To decrypt the encrypted vault file
+	# ansible-vault view vault_examle.yml		--> To view the encrypted vault file
+	# ansible-vault rekey vault_examle.yml		--> To change the existing vault password
+
+  Ansible Vault examples:-
+   Step 1: Create an example playbook for vault execution
+	# vim vault_example.yml
+		- hosts: web
+  		  gather_facts: False
+  		  vars_files: vault_vars.yml
+  		  tasks:
+    		   - name: Add secret text to vault.txt
+      		     lineinfile:
+		      path: /tmp/vault.txt
+		      create: yes
+		      line: "{{ password }}"
+		     no_log: true
+
+   Step 2: Create Vault variable file
+	# ansible-vault create vault_vars.yml	--> Enter Vault password twice
+		password: redhat
+
+   Step 3: Running playbook using --ask-vault-pass option
+	# ansible-playbook vault_example.yml --ask-vault-pass -k -u ansible
+
+   Step 4: Execute playbook using --vault-password-file option
+	# vim .vault.txt --> File should only contain vault password
+	# ansible-playbook vault_example.yml --vault-password-file=.vault.txt -k -u ansible
+
+   Encrypt Variable using ansible-vault:-
+	Step 1: # ansible-vault encrypt_string password123 --ask-vault-pass --> Below value will be generated, copy and paste it in vault_vars.yml file
+		!vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          32306531393332633938643330633462666566393264373361336239373565616262343334643733
+          3439373737613631646436366436663938363534326334660a643435633661396266646231616464
+          66356638313330643061653564383239306430346132633863376263376236396330393431323030
+          3138636436353030620a616662613331386131626238613035633034363039336561643038326139
+          3161
+
+	Step 2: # vim vault_vars.yml	--> After pasting, vault vars file will look like below
+		password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          32306531393332633938643330633462666566393264373361336239373565616262343334643733
+          3439373737613631646436366436663938363534326334660a643435633661396266646231616464
+          66356638313330643061653564383239306430346132633863376263376236396330393431323030
+          3138636436353030620a616662613331386131626238613035633034363039336561643038326139
+          3161
+
+	Step 3: # ansible-playbook vault_example.yml --ask-vault-pass -k -u ansible --> Execute playbook using this command
+
+   Encrypt using vault-id:-
+	Step 1: ansible-vault create --vault-id prod@prompt vault_vars.yml		--> Creating a encrypted file using vault ID
+	Step 2: ansible-playbook vault_example.yml --vault-id prod@prompt -k -u ansible --> Using the playbook to execute --vault-id
+
+	*** Vault ID can be used by multiple options ***
+	1. For Prompting --> ansible-playbook vault_example.yml --vault-id prod@prompt -k -u ansible
+	2. Using File	 --> ansible-playbook vault_example.yml --vault-id prod@.vault.txt -k -u ansible
+
+Improve Ansible Performance using below techniques:-
+	1. Forks - Parallel process execution, by default it's 5 and we can increase by changing to ansible.cfg file or using -f flag to increase
+	2. Async & Poll usage - ansible-playbook async_poll.yml -k -u ansible
+	3. Disabling gather_facts
+	4. mitogen - https://www.youtube.com/watch?v=NZUYAbGs-ec --> A python module usage

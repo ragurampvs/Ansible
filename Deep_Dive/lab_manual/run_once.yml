@@ -1,0 +1,8 @@
+- hosts: all
+  gather_facts: False
+  user: ansible
+  become: yes
+  tasks:
+    - name: Run_Once testing for service restart
+      service: name=httpd state=restarted
+      run_once: true

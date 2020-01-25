@@ -1,0 +1,13 @@
+- hosts: db
+  user: ansible
+  tasks:
+   - block:
+     - name: Check File Availability
+       file: path=/tmp/block.txt
+     rescue:
+      - name: Copy the content  
+        copy: content="This is a test for block & Rescue" dest=/tmp/block.txt force=no
+
+   - file: src=/tmp/block.txt dest=/tmp/block state=link
+ 
+   - fetch: src=/tmp/block.txt dest=/tmp/ flat=yes

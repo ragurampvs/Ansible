@@ -1,0 +1,27 @@
+- hosts: all
+  user: ansible
+  become: yes
+  gather_facts: False
+  tasks:
+   
+    - name: Blockinfile example
+      blockinfile: 
+        dest: /tmp/blockinfile.txt
+        block: |
+          This is Ansible BlockInFile testing
+          Next play is lineinfile
+
+    - name: Lineinfile Example
+      lineinfile:
+        path: /tmp/blockinfile.txt
+        insertbefore: '^Next play is lineinfile'
+        line: This line belongs to lineinfile module and inserted before the below line
+
+    - name: Replacing first match using shell
+      shell: sed -ie '0,/lineinfile/s//replace_module/' /tmp/blockinfile.txt
+   
+    - name: Using Replace Module
+      replace:
+        path: /tmp/blockinfile.txt
+        regexp: '(\s+)lineinfile(\s+.*)?$'
+        replace: '\1testreplace\2'

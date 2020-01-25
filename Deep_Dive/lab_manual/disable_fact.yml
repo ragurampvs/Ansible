@@ -1,0 +1,10 @@
+- hosts: all
+  gather_facts: no
+
+  pre_tasks:
+     - setup:
+         gather_subset: 'network'
+
+  tasks:
+    - debug: var=ansible_hostname
+    - debug: var=ansible_default_ipv4.address

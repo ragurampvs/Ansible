@@ -1,0 +1,21 @@
+- hosts: all
+  gather_facts: False
+  user: ansible
+  tasks:
+
+    - name: Download file with check (sha256)
+      get_url:
+         url: http://apachemirror.wuchna.com/tomcat/tomcat-8/v8.5.50/bin/apache-tomcat-8.5.50.tar.gz
+         dest: /tmp/
+         checksum: sha512:ffca86027d298ba107c7d01c779318c05b61ba48767cc5967ee6ce5a88271bb6ec8eed60708d45453f30eeedddcaedd1a369d6df1b49eea2cd14fa40832cfb90 
+      delegate_to: localhost
+
+    - name: Unarchive apache-tomcat-8.5.50.tar.gz to remote machine
+      unarchive: src=/tmp/apache-tomcat-8.5.50.tar.gz dest=/home/ansible/
+
+    - name: Create cron job at 23 hours and 55 minutes everyday - Set cronjob for ansible user
+      cron:
+        name: "Restart Apache Tomcat Service"
+        minute: "55"
+        hour: "23"
+        job: "/home/ansible/apache-tomcat-8.5.50/bin/startup.sh > /dev/null"

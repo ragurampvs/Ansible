@@ -1,0 +1,15 @@
+--- 
+- hosts: db
+  user: ansible
+  tasks:
+
+    - name: Check Directory
+      stat: path=/data
+      register: dir_stat
+
+    - name: Exit from playbook if directory not available
+      fail: msg="/data directory not available"
+      when: dir_stat.stat.isdir == False
+
+    - name: Continue if last play succeed
+      shell: echo "Welcome to Ansible" 
