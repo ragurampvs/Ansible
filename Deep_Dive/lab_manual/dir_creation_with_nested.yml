@@ -1,0 +1,11 @@
+---
+ - hosts: localhost
+   gather_facts: false
+   tasks:
+     - name: Creating Directory & Sub-Directory using with_nested option
+       file: 
+        path: /tmp/{{item.0}}/{{item.1}}
+        state: directory
+       with_nested:
+           - ['test1']
+           - ['test2', 'test3', 'test4']

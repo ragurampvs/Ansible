@@ -1,4 +1,4 @@
-- hosts: db
+- hosts: web
   user: ansible
   tasks:
    - block:
