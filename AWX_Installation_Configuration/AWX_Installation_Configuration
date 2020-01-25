@@ -37,7 +37,7 @@ Install AWX
 
 	# docker images -a ; docker ps -a
 
-	*** Login with Browser UI ***
+	*** Login with Browser UI - Give your local ip - http://<IPAddress>***
 		admin / password
 
 #######################################################################################################################################################
