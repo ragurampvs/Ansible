@@ -36,6 +36,9 @@ Delegate To examples:-
 Failed when condition not met:-
 	$ ansible-playbook failed_when.yml
 
+Loops using with_nested:-
+	$ ansible-playbook dir_creation_with_nested.yml -k -u ansible
+
 Block/Rescue & Fetch Example:-
 	$ ansible-playbook block_rescue.yml 
 		Option 1 --> - fetch: src=/tmp/block.txt dest=/tmp/ flat=yes	--> copy only file
