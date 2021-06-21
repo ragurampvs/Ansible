@@ -152,3 +152,24 @@ Improve Ansible Performance using below techniques:-
 	2. Async & Poll usage - ansible-playbook async_poll.yml -k -u ansible
 	3. Disabling gather_facts
 	4. mitogen - https://www.youtube.com/watch?v=NZUYAbGs-ec --> A python module usage
+
+To configure multiple NIC with corresponding IP address JINJA2 template:-
+	# cat multi_nic_ip.yml
+	  - hosts: web
+  	    tasks:
+	      - template: 
+	          src: multi_nic_ip.j2
+	          dest: /tmp/multi_nic_ip.txt 
+
+	# cat multi_nic_ip.j2 --> JINJA2 template to get multiple NIC interface & its IP-address
+	  {% for iface in ansible_interfaces %}
+ 	   {{ iface}} :
+	   {% if  hostvars[inventory_hostname]['ansible_%s'|format(iface)]['ipv4'] is defined %}
+		{{ hostvars[inventory_hostname]['ansible_%s'|format(iface)]['ipv4']['address'] }}
+	   {% else %}
+	 	No ip address set
+	   {% endif %}
+	   {% endfor %}
+
+	# ansible-playbook multi_nic_ip.yml -k -u ansible   --> Command to execute multi_nic_ip.yml playbook
+
