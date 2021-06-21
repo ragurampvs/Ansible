@@ -1,4 +1,4 @@
-- hosts: common
+- hosts: web
   tasks:
     - template: 
         src: multi_nic_ip.j2
