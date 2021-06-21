@@ -1,0 +1,5 @@
+- hosts: common
+  tasks:
+    - template: 
+        src: multi_nic_ip.j2
+        dest: /tmp/multi_nic_ip.txt 

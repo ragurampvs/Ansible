@@ -1,0 +1,8 @@
+{% for iface in ansible_interfaces %}
+ {{ iface}} :
+ {% if  hostvars[inventory_hostname]['ansible_%s'|format(iface)]['ipv4'] is defined %}
+   {{ hostvars[inventory_hostname]['ansible_%s'|format(iface)]['ipv4']['address'] }}
+ {% else %}
+   No ip address set
+ {% endif %}
+{% endfor %}
